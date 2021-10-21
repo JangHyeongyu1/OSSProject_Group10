@@ -3,6 +3,6 @@ include <stdio.h>
 int main(){
     
     printf("10조 장현규입니다.\");
-    
+    printf("10조 안준환입니다.\n");
     return 0;
 }
