@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <windows.h>
+
+
+int score = 0; //처음 점수는 0으로 설정
+int heart = 10; //처음 체력을 10으로 설정
+
+void gotoxy(int x, int y)
+{
+	COORD pos = { x,y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
+int main() {
+	while (heart!=0) {  //체력이 0이 되지 않는 이상 계속 점수 증가
+		score = heart + score; //남은 체력이 많을수록 점수가 더 많이 올라가므로 이렇게 설정
+		gotoxy(25, 4); //점수를 출력할 위치
+		printf("점수: %d\n", score); //점수출력
+		Sleep(100); //0.1초마다 갱신
+	}
+	printf("최종 점수는 %d점입니다!!!", score); //최종화면에서 최종 점수 표시
+	return 0;
+}
