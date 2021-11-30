@@ -3,7 +3,7 @@
 
 
 int score = 0; //처음 점수는 0으로 설정
-int heart = 10; //처음 체력을 10으로 설정
+int heart = 100; //처음 체력을 100으로 설정
 
 
 void gotoxy(int x, int y)
@@ -15,16 +15,18 @@ void gotoxy(int x, int y)
 void map()
 {
     int i;
-    for (i = 1; i <= 20; i++)//x
+    for (i = 1; i <= 40; i++)//x
     {
-        gotoxy(i , 40);
+        gotoxy(i, 0);
+        printf("■");
+	gotoxy(i , 40);
         printf("■");
     }
     for (i = 0; i <= 40; i++)//y
     {
         gotoxy(1, i );
         printf("■");
-        gotoxy(21, i );
+        gotoxy(41, i );
         printf("■");
     }
 }
@@ -32,7 +34,7 @@ void map()
 int main() {
 	while (heart != 0) {  //체력이 0이 되지 않는 이상 계속 점수 증가
         map(); //map불러오기
-        score = heart + score; //남은 체력이 많을수록 점수가 더 많이 올라가므로 이렇게 설정
+        score = 0.1*heart + score; //남은 체력이 많을수록 점수가 더 많이 올라가므로 이렇게 설정
 		gotoxy(46, 25); //점수를 출력할 위치
 		printf("점수: %d\n", score); //점수출력
 		Sleep(100); //0.1초마다 갱신
