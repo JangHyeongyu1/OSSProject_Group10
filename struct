@@ -1,0 +1,25 @@
+#include<windows.h>
+
+typedef struct {              //F학점
+	int x;
+	int y;
+	int check;
+}FGrades;
+
+typedef struct {             //회복
+	int x;
+	int y;
+	int check;
+}Meds;
+
+
+typedef struct {                //플레이어
+	int x;
+	int y;
+	int check;
+}Player;
+
+void Gotoxy(int _x, int _y) { //커서의 위치를 변경하는 함수
+	COORD pos = { _x, _y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
