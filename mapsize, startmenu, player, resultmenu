@@ -89,7 +89,8 @@ void StartMenu() {
 
     while (1) {
         Clear();
-
+        GotoXY(2, HEIGTH / 6);
+        printf("GAME START");
         GotoXY(2, HEIGTH / 5);
         printf("***F학점 피하기 게임***");
         GotoXY(2, HEIGTH / 4);
@@ -111,9 +112,9 @@ bool ResultMenu() {
         Clear();
 
         GotoXY(2, HEIGTH / 5);
-        printf("Result Menu");
+        printf("GAME OVER");
         GotoXY(2,HEIGTH / 4);
-        printf("점수 : %d ", SCORE);
+        printf("당신의 점수는 : %d ", SCORE);
         GotoXY(2,HEIGTH / 3);
         printf("게임을 계속 하시겠습니까? Y / N");
 
