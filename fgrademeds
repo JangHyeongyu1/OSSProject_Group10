@@ -1,0 +1,111 @@
+#pragma once
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include<windows.h>
+	#include <mmsystem.h>
+	#pragma comment(lib,"winmm.lib")
+	#include "struct.h"
+	#define WIDTH 40
+	#define HEIGHT 40
+	#define F_amount 50
+	#define M_amount 1
+
+	int mode = -1;
+	int count = 0;
+	int health = 100;
+
+	FGrades fgrade[F_amount];											//장애물 구조체와 오브젝트 생성
+	Meds meds[M_amount];
+	Player player;
+
+
+	void CreateFGrades() {
+		int i;
+		for (i = 0; i < F_amount; i++) {
+			if (!fgrade[i].check) {
+				fgrade[i].x = rand() % (WIDTH-1) +1;									//WIDTH가 40이므로 0~40중 무작위값이 fgradex에 저장
+				fgrade[i].y = HEIGHT;
+				fgrade[i].check = 1;															//fgrade 오브젝트의 존재여부를 존재하면 1, 존재하지 않으면 0 으로 나타냄
+				return;
+			}
+		}
+	}
+
+	void FallFGrades() {
+		int i;
+		for (i = 0; i < F_amount; i++) {
+			if (fgrade[i].check) {											//fgrade가 존재한다면 해당 fgrade의y값을 계속해서 감소시켜준다.
+				fgrade[i].y--;
+			}
+		}
+	}
+
+	void DeleteFGrades() {
+		int i;
+		for (i = 0; i < F_amount; i++) {
+			if (fgrade[i].check && fgrade[i].y <= 0)							//fgrade가 존재하고, fgrade가 바닥에 닿았을 때 존재여부를 0으로 설정함
+				fgrade[i].check = 0;
+		}
+	}
+
+	void CollideFGrades() {
+		int i;
+		for (i = 0; i < F_amount; i++)
+		{																												//fgrade가 존재하고, fgrade의 x,y위치값이 플레이어와 같을 때 체력을 20깎음
+			if (fgrade[i].check&&(HEIGHT- fgrade[i].y == player.y) && ((fgrade[i].x-1 <= player.x) && (player.x<= fgrade[i].x+1) )){
+				health = health - 20;
+				fgrade[i].check = 0;
+				PlaySound(L"damaged.wav", 0, SND_FILENAME | SND_ASYNC);
+			}
+		}
+	}
+
+
+	void CreateMeds() {
+		int i;
+		for (i = 0; i < M_amount; i++) {
+			if (!meds[i].check&& count >=110) {
+				meds[i].x = rand() % (WIDTH-2)+1;
+				meds[i].y = HEIGHT;
+				meds[i].check = 1;
+				count = 0;
+				return;
+			}
+			count++;
+		}
+	}
+
+	void FallMeds() {
+		int i;
+		for (i = 0; i < M_amount; i++) {
+			if (meds[i].check) {
+				meds[i].y--;
+			}
+		}
+	}
+
+	void DeleteMeds() {
+		int i;
+		for (i = 0; i < M_amount; i++) {
+			if (meds[i].check && meds[i].y <= 0)
+				meds[i].check = 0;
+		}
+	}
+
+	void CollideMeds() {
+		int i;
+		for (i = 0; i < 1; i++)
+		{
+			if (meds[i].check && (HEIGHT- meds[i].y == player.y) && (meds[i].x-1<= player.x)&&(player.x<=meds[i].x+1)&&mode==0) {
+				health = health + 15;
+				meds[i].check = 0;
+				PlaySound(L"healed.wav", 0, SND_FILENAME | SND_ASYNC);
+			}
+			if (meds[i].check && (HEIGHT-meds[i].y == player.y) && (meds[i].x-1 <= player.x )&&(player.x <= meds[i].x + 1)&& mode == 1) {
+				health = health + 10;
+				meds[i].check = 0;
+				PlaySound(L"healed.wav", 0, SND_FILENAME | SND_ASYNC);
+			}
+
+		}
+	}
