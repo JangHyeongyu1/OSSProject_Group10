@@ -1,0 +1,37 @@
+#pragma once
+#include <stdio.h>
+#include <windows.h>
+#include "fgrademeds.h"
+
+void InputProcess() {
+    if (GetAsyncKeyState(VK_LEFT) & 0x8000) {   //왼쪽방향키
+        player.x--;
+        if (player.x < 1) player.x = 1;
+    }
+
+    if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {   //오른쪽방향키
+        player.x++;
+        if (player.x > WIDTH - 2) player.x = WIDTH - 2;
+    }
+
+    if (GetAsyncKeyState(VK_UP) & 0x8000) {   //위쪽방향키
+        player.y--;
+        if (player.y < 1) player.y = 1;
+    }
+
+    if (GetAsyncKeyState(VK_DOWN) & 0x8000) {   //아래쪽방향키
+        player.y++;
+        if (player.y > HEIGHT - 1) player.y = HEIGHT - 1;
+    }
+}
+
+
+void PrintPlayer() {
+    gotoxy(player.x, player.y);   //커서이동
+    printf("♀");
+}
+
+void SettingPlayer() {
+    player.x = 20;
+    player.y = 30;
+}
