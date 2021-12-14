@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <windows.h>
+#include "printgame.h"
+
+int main() {
+    Size(60, 45);
+    SettingPlayer();
+    while (!regame) {
+        StartMenu();
+        FgradeGame();
+        ResultMenu();
+    }
+    return 0;
+}

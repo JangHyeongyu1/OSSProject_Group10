@@ -1,0 +1,133 @@
+#pragma once
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+#include "fgrademeds.h"
+#include "player.h"
+#include "map.h"
+
+int score = 0; //처음 점수는 0으로 설정
+bool regame = false;   //새게임 y/n
+int speed = 100;
+int score_s = 500;
+
+void SetCursor(BOOL _bShow) {
+    CONSOLE_CURSOR_INFO curInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
+    curInfo.bVisible = _bShow;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
+}
+
+void Size(int _col, int _lines) //콘솔창의 크기를 지정하는 함수
+{
+    char setText[100];
+    sprintf_s(setText, "mode con cols=%d lines=%d", _col, _lines);
+    system(setText);
+}
+
+void StartMenu() {
+
+    while (1) {
+        system("cls");
+        gotoxy(2, HEIGHT / 6);
+        printf("GAME START");
+        gotoxy(2, HEIGHT / 5);
+        printf("***F학점 피하기 게임***");
+        gotoxy(2, HEIGHT / 4);
+        printf("***조작 : 키보드 상하좌우 키***");
+        gotoxy(2, HEIGHT / 3);
+        printf("F학점과 부딪히면 게임이 종료됩니다");
+        gotoxy(2, HEIGHT / 2);
+        printf("플레이하실 모드를 입력 해주세요. \n ( 0 = NORMAL MODE  |  1 = HARD MODE): ");
+        scanf_s("%d", &mode);
+        if (mode == 0 || mode ==1) break;
+        Sleep(100);
+    }
+}
+
+void FgradeGame() {
+    if (mode == 1) speed = speed - 25;
+    while (health > 0) {  //체력이 0이 되지 않는 이상 계속 점수 증가
+        int i;
+        srand((int)malloc(NULL));
+        CreateFGrades();
+        FallFGrades();
+        DeleteFGrades();
+        CreateMeds();
+        FallMeds();
+        DeleteMeds();
+        CollideFGrades();
+        CollideMeds();
+        system("cls");
+        map(); //map불러오기
+
+        InputProcess();
+        PrintPlayer();
+        for (i = 0; i < F_amount; i++) {                                                             //F학점 출력
+            if (fgrade[i].check) {
+                gotoxy(fgrade[i].x, HEIGHT - fgrade[i].y);
+                printf("F");
+            }
+        }
+        for (i = 0; i < M_amount; i++) {                                                                //회복약 출력
+            if (meds[i].check) {
+                gotoxy(meds[i].x, HEIGHT - meds[i].y);
+                printf("♥");
+            }
+        }
+        score = 0.1 * health + score; //남은 체력이 많을수록 점수가 더 많이 올라가므로 이렇게 설정
+        gotoxy(46, 25); //점수를 출력할 위치
+        printf("점수: %d\n", score); //점수출력
+        gotoxy(46, 20); //점수를 출력할 위치
+        printf("체력: %d\n", health); //점수출력
+        Sleep(speed);
+        if (mode == 0) {
+            if (score_s <= score && speed > 10) {
+                speed = speed - 5;
+                score_s = score_s + 700;
+            }
+        }
+        if (mode == 1) {
+            if (score_s <= score && speed > 0) {
+                speed = speed - 5;
+                score_s = score_s + 500;
+            }
+        }
+    }
+}
+
+bool ResultMenu() {
+
+    while (1) {
+
+        system("cls");
+
+        gotoxy(2, HEIGHT / 5);
+        printf("GAME OVER");
+        if (mode == 0) {
+            gotoxy(2, HEIGHT / 4);
+            printf("(NORMAL) 당신의 점수는 : %d ", score);
+        }
+        if (mode == 1) {
+            gotoxy(2, HEIGHT / 4);
+            printf("(HARD) 당신의 점수는 : %d ", score);
+        }
+        gotoxy(2, HEIGHT / 3);
+        printf("재수강 하시겠습니까? Y / N");
+
+        if (GetAsyncKeyState('Y') & 0x8000) {
+            regame = false;   //true이면 게임종료
+            score = 0; //새게임 점수 초기화
+            health = 100; //체력 초기화
+            break;
+        }
+
+        if (GetAsyncKeyState('N') & 0x8000) {
+            regame = true;   //true이면 게임종료
+            break;
+        }
+        Sleep(100);
+    }
+    return regame;
+}
